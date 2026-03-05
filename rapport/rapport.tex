@@ -1,0 +1,833 @@
+% =============================================
+% ChronoVault — Rapport de Projet
+% Auteurs : ELHARCHY Mostafa, EL MESKI Karim
+% =============================================
+
+\documentclass[12pt,a4paper]{report}
+
+% ── Packages ─────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{tcolorbox}
+\usepackage{multicol}
+
+% ── Géométrie ────────────────────────────────
+\geometry{margin=2.5cm}
+
+% ── Couleurs ─────────────────────────────────
+\definecolor{cvgreen}{HTML}{16A34A}
+\definecolor{cvdark}{HTML}{171717}
+\definecolor{cvgray}{HTML}{737373}
+\definecolor{codebg}{HTML}{F5F5F5}
+\definecolor{codeframe}{HTML}{D4D4D4}
+
+% ── Listings (code) ─────────────────────────
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b,
+    numbers=left,
+    numberstyle=\tiny\color{cvgray},
+    keywordstyle=\color{cvgreen}\bfseries,
+    commentstyle=\color{cvgray}\itshape,
+    stringstyle=\color{cvdark},
+    xleftmargin=1em,
+    framexleftmargin=1em
+}
+
+% ── En-têtes / pieds de page ─────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{cvgray}{ChronoVault}}
+\fancyhead[R]{\small\textcolor{cvgray}{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Chapitres stylisés ──────────────────────
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries\color{cvdark}}
+{\textcolor{cvgreen}{\chaptertitlename\ \thechapter}}{20pt}{\Huge}
+
+% ── Liens ────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=cvgreen,
+    urlcolor=cvgreen,
+    citecolor=cvgreen
+}
+
+% ══════════════════════════════════════════════
+%  PAGE DE GARDE
+% ══════════════════════════════════════════════
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries\textcolor{cvdark}{ChronoVault}\par}
+    \vspace{0.5cm}
+    {\Large\textcolor{cvgreen}{Coffre-fort de souvenirs collaboratif}\par}
+    \vspace{1cm}
+
+    \rule{0.6\textwidth}{1pt}\par
+    \vspace{1.5cm}
+
+    {\large\textbf{Rapport de Projet}\par}
+    \vspace{2cm}
+
+    {\large
+        \textbf{Réalisé par :}\par
+        \vspace{0.5cm}
+        ELHARCHY Mostafa \par
+        EL MESKI Karim \par
+    }
+
+    \vspace{2cm}
+
+    {\large
+        \textbf{Technologies utilisées :}\par
+        \vspace{0.3cm}
+        PHP 8 \textbullet{} MySQL/MariaDB \textbullet{} HTML5 \textbullet{} Tailwind CSS \textbullet{} JavaScript\par
+    }
+
+    \vfill
+    {\large Année universitaire 2025 -- 2026\par}
+\end{titlepage}
+
+% ── Table des matières ───────────────────────
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════
+%  CHAPITRE 1 : INTRODUCTION
+% ══════════════════════════════════════════════
+\chapter{Introduction}
+
+\section{Contexte du projet}
+
+À l'ère du numérique, les souvenirs sont de plus en plus partagés sous forme de photos, de messages et de vidéos. Cependant, la notion de \textit{capsule temporelle} --- un conteneur que l'on remplit de souvenirs et que l'on n'ouvre qu'à une date future --- reste un concept captivant qui n'a pas encore été pleinement exploité dans le monde des applications web.
+
+Le projet \textbf{ChronoVault} s'inscrit dans cette optique : il propose une \textbf{application web collaborative} permettant à plusieurs utilisateurs de créer des capsules temporelles numériques, d'y déposer des souvenirs (textes, images), et de ne les révéler qu'à une date d'ouverture définie à l'avance.
+
+\section{Problématique}
+
+Comment concevoir une application web sécurisée et intuitive permettant à un groupe d'utilisateurs de :
+\begin{itemize}[noitemsep]
+    \item Créer et gérer des capsules temporelles collaboratives ?
+    \item Inviter d'autres utilisateurs à participer à une capsule ?
+    \item Ajouter des souvenirs (textes et images) dans une capsule verrouillée ?
+    \item Garantir que le contenu ne soit accessible qu'après la date d'ouverture ?
+\end{itemize}
+
+\section{Objectifs}
+
+Les objectifs principaux de ce projet sont :
+\begin{enumerate}[noitemsep]
+    \item \textbf{Authentification sécurisée} : inscription, connexion et gestion de sessions avec hachage bcrypt.
+    \item \textbf{Gestion des capsules} : création, consultation, suppression et verrouillage temporel.
+    \item \textbf{Collaboration} : système d'invitations permettant d'ajouter des membres à une capsule.
+    \item \textbf{Souvenirs multimédia} : ajout de messages texte et d'images (upload sécurisé).
+    \item \textbf{Interface moderne} : design responsive avec mode sombre/clair.
+    \item \textbf{Architecture SPA} : navigation fluide sans rechargement de page.
+\end{enumerate}
+
+\section{Technologies utilisées}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{l X}
+        \toprule
+        \textbf{Couche} & \textbf{Technologies} \\
+        \midrule
+        Back-end & PHP 8, API REST, sessions PHP, bcrypt \\
+        Base de données & MySQL / MariaDB, PDO \\
+        Front-end & HTML5, JavaScript (Vanilla), Tailwind CSS (CDN) \\
+        Serveur & Apache (XAMPP), .htaccess pour le routage SPA \\
+        Outils & Git, VS Code, XAMPP \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Stack technologique du projet}
+\end{table}
+
+
+% ══════════════════════════════════════════════
+%  CHAPITRE 2 : CONCEPTION
+% ══════════════════════════════════════════════
+\chapter{Conception}
+
+Ce chapitre présente la modélisation UML du projet ChronoVault à travers trois types de diagrammes : cas d'utilisation, classes et séquence.
+
+% ─────────────────────────────────────────────
+\section{Diagramme de cas d'utilisation}
+
+Le diagramme de cas d'utilisation identifie les acteurs du système et les fonctionnalités auxquelles ils ont accès.
+
+\subsection{Acteurs}
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Visiteur} : utilisateur non authentifié, il peut uniquement s'inscrire ou se connecter.
+    \item \textbf{Utilisateur authentifié} : peut créer des capsules, inviter des membres, ajouter des souvenirs et gérer ses invitations.
+\end{itemize}
+
+\subsection{Cas d'utilisation}
+
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=codebg, colframe=codeframe, width=\textwidth, title={\textbf{Diagramme de cas d'utilisation — ChronoVault}}]
+        \small
+        \textbf{Acteur : Visiteur}
+        \begin{itemize}[noitemsep, leftmargin=1.5em]
+            \item S'inscrire
+            \item Se connecter
+        \end{itemize}
+
+        \vspace{0.3cm}
+        \textbf{Acteur : Utilisateur authentifié}
+        \begin{itemize}[noitemsep, leftmargin=1.5em]
+            \item Se déconnecter
+            \item Créer une capsule temporelle
+            \item Consulter ses capsules
+            \item Supprimer une capsule (créateur uniquement)
+            \item Inviter un utilisateur à une capsule
+            \item Accepter / Refuser une invitation
+            \item Ajouter un souvenir (texte ou image)
+            \item Supprimer un souvenir
+            \item Consulter les souvenirs (si capsule ouverte)
+            \item Basculer mode sombre / clair
+        \end{itemize}
+    \end{tcolorbox}
+    \caption{Cas d'utilisation du système ChronoVault}
+\end{figure}
+
+\noindent
+\textbf{Description textuelle UML :}
+
+\begin{verbatim}
+@startuml
+left to right direction
+
+actor "Visiteur" as V
+actor "Utilisateur" as U
+
+rectangle ChronoVault {
+    V --> (S'inscrire)
+    V --> (Se connecter)
+
+    U --> (Se déconnecter)
+    U --> (Créer une capsule)
+    U --> (Consulter ses capsules)
+    U --> (Supprimer une capsule)
+    U --> (Inviter un utilisateur)
+    U --> (Accepter / Refuser invitation)
+    U --> (Ajouter un souvenir)
+    U --> (Supprimer un souvenir)
+    U --> (Consulter les souvenirs)
+    U --> (Basculer thème)
+
+    (S'inscrire) .> (Se connecter) : <<include>>
+}
+@enduml
+\end{verbatim}
+
+
+% ─────────────────────────────────────────────
+\section{Diagramme de classes}
+
+Le diagramme de classes modélise la structure des données et les relations entre les entités du système.
+
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=codebg, colframe=codeframe, width=\textwidth, title={\textbf{Diagramme de classes — ChronoVault}}]
+        \small
+        \textbf{User}
+        \begin{itemize}[noitemsep, leftmargin=1.5em]
+            \item \texttt{- id : INT (PK, AUTO\_INCREMENT)}
+            \item \texttt{- username : VARCHAR(50) UNIQUE}
+            \item \texttt{- email : VARCHAR(100) UNIQUE}
+            \item \texttt{- password\_hash : VARCHAR(255)}
+            \item \texttt{- avatar : VARCHAR(255)}
+            \item \texttt{- created\_at : DATETIME}
+            \item \texttt{- updated\_at : DATETIME}
+        \end{itemize}
+
+        \vspace{0.4cm}
+        \textbf{Capsule}
+        \begin{itemize}[noitemsep, leftmargin=1.5em]
+            \item \texttt{- id : INT (PK, AUTO\_INCREMENT)}
+            \item \texttt{- title : VARCHAR(150)}
+            \item \texttt{- description : TEXT}
+            \item \texttt{- opening\_date : DATE}
+            \item \texttt{- creator\_id : INT (FK → User.id)}
+            \item \texttt{- is\_opened : TINYINT(1)}
+            \item \texttt{- cover\_image : VARCHAR(255)}
+            \item \texttt{- created\_at : DATETIME}
+            \item \texttt{- updated\_at : DATETIME}
+        \end{itemize}
+
+        \vspace{0.4cm}
+        \textbf{CapsuleMember}
+        \begin{itemize}[noitemsep, leftmargin=1.5em]
+            \item \texttt{- id : INT (PK, AUTO\_INCREMENT)}
+            \item \texttt{- capsule\_id : INT (FK → Capsule.id)}
+            \item \texttt{- user\_id : INT (FK → User.id)}
+            \item \texttt{- role : ENUM('creator', 'member')}
+            \item \texttt{- joined\_at : DATETIME}
+        \end{itemize}
+
+        \vspace{0.4cm}
+        \textbf{Invitation}
+        \begin{itemize}[noitemsep, leftmargin=1.5em]
+            \item \texttt{- id : INT (PK, AUTO\_INCREMENT)}
+            \item \texttt{- capsule\_id : INT (FK → Capsule.id)}
+            \item \texttt{- invited\_by : INT (FK → User.id)}
+            \item \texttt{- invited\_user\_id : INT (FK → User.id)}
+            \item \texttt{- status : ENUM('pending', 'accepted', 'declined')}
+            \item \texttt{- created\_at : DATETIME}
+        \end{itemize}
+
+        \vspace{0.4cm}
+        \textbf{Memory}
+        \begin{itemize}[noitemsep, leftmargin=1.5em]
+            \item \texttt{- id : INT (PK, AUTO\_INCREMENT)}
+            \item \texttt{- capsule\_id : INT (FK → Capsule.id)}
+            \item \texttt{- user\_id : INT (FK → User.id)}
+            \item \texttt{- text\_content : TEXT}
+            \item \texttt{- image\_path : VARCHAR(255)}
+            \item \texttt{- created\_at : DATETIME}
+            \item \texttt{- updated\_at : DATETIME}
+        \end{itemize}
+
+        \vspace{0.5cm}
+        \textbf{Relations :}
+        \begin{itemize}[noitemsep, leftmargin=1.5em]
+            \item User \texttt{1} --- \texttt{0..*} Capsule \hfill (un utilisateur crée 0 à N capsules)
+            \item User \texttt{1} --- \texttt{0..*} CapsuleMember \hfill (un utilisateur est membre de 0 à N capsules)
+            \item Capsule \texttt{1} --- \texttt{1..*} CapsuleMember \hfill (une capsule a au moins 1 membre)
+            \item User \texttt{1} --- \texttt{0..*} Invitation \hfill (un utilisateur envoie/reçoit des invitations)
+            \item Capsule \texttt{1} --- \texttt{0..*} Invitation \hfill (une capsule peut avoir des invitations)
+            \item User \texttt{1} --- \texttt{0..*} Memory \hfill (un utilisateur crée des souvenirs)
+            \item Capsule \texttt{1} --- \texttt{0..*} Memory \hfill (une capsule contient des souvenirs)
+        \end{itemize}
+    \end{tcolorbox}
+    \caption{Diagramme de classes du système ChronoVault}
+\end{figure}
+
+\noindent
+\textbf{Description textuelle UML (PlantUML) :}
+
+\begin{verbatim}
+@startuml
+class User {
+    - id : int
+    - username : string
+    - email : string
+    - password_hash : string
+    - avatar : string
+    - created_at : datetime
+    - updated_at : datetime
+}
+
+class Capsule {
+    - id : int
+    - title : string
+    - description : string
+    - opening_date : date
+    - creator_id : int
+    - is_opened : boolean
+    - cover_image : string
+    - created_at : datetime
+}
+
+class CapsuleMember {
+    - id : int
+    - capsule_id : int
+    - user_id : int
+    - role : enum
+    - joined_at : datetime
+}
+
+class Invitation {
+    - id : int
+    - capsule_id : int
+    - invited_by : int
+    - invited_user_id : int
+    - status : enum
+    - created_at : datetime
+}
+
+class Memory {
+    - id : int
+    - capsule_id : int
+    - user_id : int
+    - text_content : string
+    - image_path : string
+    - created_at : datetime
+}
+
+User "1" -- "0..*" Capsule : crée
+User "1" -- "0..*" CapsuleMember : participe
+Capsule "1" -- "1..*" CapsuleMember : contient
+User "1" -- "0..*" Invitation : envoie/reçoit
+Capsule "1" -- "0..*" Invitation : a
+User "1" -- "0..*" Memory : rédige
+Capsule "1" -- "0..*" Memory : contient
+@enduml
+\end{verbatim}
+
+
+% ─────────────────────────────────────────────
+\section{Diagrammes de séquence}
+
+Les diagrammes de séquence illustrent les interactions entre l'utilisateur, le front-end (SPA) et le back-end (API PHP) pour les scénarios clés.
+
+\subsection{Séquence : Inscription}
+
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=codebg, colframe=codeframe, width=\textwidth, title={\textbf{Diagramme de séquence — Inscription}}]
+        \small
+        \begin{enumerate}[noitemsep]
+            \item \textbf{Utilisateur} $\rightarrow$ \textbf{SPA} : Remplit le formulaire (pseudo, email, mot de passe)
+            \item \textbf{SPA} $\rightarrow$ \textbf{API} : \texttt{POST /api/auth.php?action=register} \{username, email, password\}
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : Vérifier unicité (username, email)
+            \item \textbf{BDD} $\rightarrow$ \textbf{API} : Résultat de la vérification
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : \texttt{INSERT INTO users} (password haché bcrypt)
+            \item \textbf{API} $\rightarrow$ \textbf{API} : Créer session PHP (\texttt{\$\_SESSION['user\_id']})
+            \item \textbf{API} $\rightarrow$ \textbf{SPA} : \texttt{\{success: true, user: \{...\}\}}
+            \item \textbf{SPA} $\rightarrow$ \textbf{Utilisateur} : Toast « Compte créé ! » + redirection Dashboard
+        \end{enumerate}
+    \end{tcolorbox}
+    \caption{Séquence d'inscription d'un utilisateur}
+\end{figure}
+
+\noindent
+\textbf{PlantUML :}
+
+\begin{verbatim}
+@startuml
+actor Utilisateur
+participant "SPA (JavaScript)" as SPA
+participant "API PHP" as API
+database "MySQL" as DB
+
+Utilisateur -> SPA : Remplit formulaire inscription
+SPA -> API : POST /api/auth.php?action=register
+API -> DB : SELECT (vérifier unicité)
+DB --> API : OK / Doublon
+alt Utilisateur unique
+    API -> DB : INSERT INTO users
+    DB --> API : userId
+    API -> API : $_SESSION['user_id'] = userId
+    API --> SPA : {success: true, user: {...}}
+    SPA --> Utilisateur : Toast + Dashboard
+else Doublon
+    API --> SPA : {success: false, error: "..."}
+    SPA --> Utilisateur : Toast erreur
+end
+@enduml
+\end{verbatim}
+
+
+\subsection{Séquence : Création d'une capsule}
+
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=codebg, colframe=codeframe, width=\textwidth, title={\textbf{Diagramme de séquence — Création d'une capsule}}]
+        \small
+        \begin{enumerate}[noitemsep]
+            \item \textbf{Utilisateur} $\rightarrow$ \textbf{SPA} : Remplit titre, description, date d'ouverture
+            \item \textbf{SPA} $\rightarrow$ \textbf{API} : \texttt{POST /api/capsules/?action=create} \{title, description, opening\_date\}
+            \item \textbf{API} $\rightarrow$ \textbf{API} : Vérifier authentification (\texttt{requireAuth()})
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : \texttt{INSERT INTO capsules}
+            \item \textbf{BDD} $\rightarrow$ \textbf{API} : capsuleId
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : \texttt{INSERT INTO capsule\_members} (rôle = 'creator')
+            \item \textbf{API} $\rightarrow$ \textbf{SPA} : \texttt{\{success: true, capsule\_id: ...\}}
+            \item \textbf{SPA} $\rightarrow$ \textbf{Utilisateur} : Toast « Capsule créée ! » + redirection Dashboard
+        \end{enumerate}
+    \end{tcolorbox}
+    \caption{Séquence de création d'une capsule temporelle}
+\end{figure}
+
+
+\subsection{Séquence : Ajout d'un souvenir}
+
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=codebg, colframe=codeframe, width=\textwidth, title={\textbf{Diagramme de séquence — Ajout d'un souvenir}}]
+        \small
+        \begin{enumerate}[noitemsep]
+            \item \textbf{Utilisateur} $\rightarrow$ \textbf{SPA} : Rédige un texte et/ou sélectionne une image
+            \item \textbf{SPA} $\rightarrow$ \textbf{API} : \texttt{POST /api/memories/?action=add} (FormData : capsule\_id, text\_content, image)
+            \item \textbf{API} $\rightarrow$ \textbf{API} : Vérifier authentification + appartenance à la capsule
+            \item \textbf{API} $\rightarrow$ \textbf{API} : Valider l'image (type, taille $\leq$ 5 Mo)
+            \item \textbf{API} $\rightarrow$ \textbf{Serveur} : Sauvegarder l'image dans \texttt{/uploads/}
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : \texttt{INSERT INTO memories}
+            \item \textbf{API} $\rightarrow$ \textbf{SPA} : \texttt{\{success: true, memory: \{...\}\}}
+            \item \textbf{SPA} $\rightarrow$ \textbf{Utilisateur} : Toast « Souvenir ajouté ! » + rafraîchissement
+        \end{enumerate}
+    \end{tcolorbox}
+    \caption{Séquence d'ajout d'un souvenir dans une capsule}
+\end{figure}
+
+
+\subsection{Séquence : Invitation d'un utilisateur}
+
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=codebg, colframe=codeframe, width=\textwidth, title={\textbf{Diagramme de séquence — Invitation}}]
+        \small
+        \begin{enumerate}[noitemsep]
+            \item \textbf{Créateur} $\rightarrow$ \textbf{SPA} : Saisit le pseudo de l'utilisateur à inviter
+            \item \textbf{SPA} $\rightarrow$ \textbf{API} : \texttt{POST /api/invitations/?action=send} \{capsule\_id, username\}
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : Vérifier que l'utilisateur existe
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : Vérifier qu'il n'est pas déjà membre / invité
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : \texttt{INSERT INTO invitations} (status = 'pending')
+            \item \textbf{API} $\rightarrow$ \textbf{SPA} : \texttt{\{success: true\}}
+            \item \textbf{SPA} $\rightarrow$ \textbf{Créateur} : Toast « Invitation envoyée ! »
+        \end{enumerate}
+
+        \vspace{0.3cm}
+        \textbf{Côté invité :}
+        \begin{enumerate}[noitemsep]
+            \item \textbf{Invité} $\rightarrow$ \textbf{SPA} : Consulte ses invitations
+            \item \textbf{SPA} $\rightarrow$ \textbf{API} : \texttt{GET /api/invitations/?action=list}
+            \item \textbf{Invité} $\rightarrow$ \textbf{SPA} : Clique « Accepter »
+            \item \textbf{SPA} $\rightarrow$ \textbf{API} : \texttt{POST /api/invitations/?action=accept}
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : \texttt{UPDATE invitations SET status='accepted'}
+            \item \textbf{API} $\rightarrow$ \textbf{BDD} : \texttt{INSERT INTO capsule\_members}
+        \end{enumerate}
+    \end{tcolorbox}
+    \caption{Séquence d'invitation et d'acceptation}
+\end{figure}
+
+
+% ══════════════════════════════════════════════
+%  CHAPITRE 3 : RÉALISATION
+% ══════════════════════════════════════════════
+\chapter{Réalisation}
+
+Ce chapitre décrit l'implémentation technique du projet ChronoVault, l'architecture des fichiers, les composants principaux et les captures d'écran de l'application.
+
+\section{Architecture du projet}
+
+Le projet suit une architecture \textbf{SPA (Single Page Application)} avec une API REST côté serveur.
+
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=codebg, colframe=codeframe, width=0.75\textwidth, title={\textbf{Arborescence du projet}}]
+        \small
+\begin{verbatim}
+chronovault/
+├── index.html              (Point d'entrée SPA)
+├── logo.png                (Logo de l'application)
+├── .htaccess               (Routage Apache SPA)
+├── js/
+│   ├── app.js              (Logique SPA principale)
+│   └── api.js              (Client HTTP pour l'API)
+├── api/
+│   ├── auth.php            (Authentification)
+│   ├── config/
+│   │   └── database.php    (Connexion PDO)
+│   ├── includes/
+│   │   └── helpers.php     (Fonctions utilitaires)
+│   ├── capsules/
+│   │   └── index.php       (CRUD capsules)
+│   ├── invitations/
+│   │   └── index.php       (Gestion invitations)
+│   └── memories/
+│       └── index.php       (Gestion souvenirs)
+├── database/
+│   └── chronovault.sql     (Schéma SQL)
+└── uploads/                (Images uploadées)
+\end{verbatim}
+    \end{tcolorbox}
+    \caption{Structure des fichiers du projet}
+\end{figure}
+
+
+\section{Base de données}
+
+La base de données \texttt{chronovault} utilise \textbf{MariaDB} avec le moteur \textbf{InnoDB} pour garantir l'intégrité référentielle via les clés étrangères.
+
+\subsection{Schéma relationnel}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{l l X}
+        \toprule
+        \textbf{Table} & \textbf{Clé primaire} & \textbf{Description} \\
+        \midrule
+        \texttt{users} & \texttt{id} & Utilisateurs (pseudo unique, email unique, mot de passe haché) \\
+        \texttt{capsules} & \texttt{id} & Capsules temporelles (titre, description, date d'ouverture) \\
+        \texttt{capsule\_members} & \texttt{id} & Relation N:N entre utilisateurs et capsules (rôle) \\
+        \texttt{invitations} & \texttt{id} & Invitations en attente, acceptées ou refusées \\
+        \texttt{memories} & \texttt{id} & Souvenirs : texte et/ou chemin d'image \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Tables de la base de données}
+\end{table}
+
+\subsection{Extrait du schéma SQL}
+
+\begin{lstlisting}[language=SQL, caption={Création de la table capsules}]
+CREATE TABLE capsules (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(150) NOT NULL,
+    description TEXT,
+    opening_date DATE NOT NULL,
+    creator_id INT NOT NULL,
+    is_opened TINYINT(1) DEFAULT 0,
+    cover_image VARCHAR(255) DEFAULT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (creator_id)
+        REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+\end{lstlisting}
+
+\subsection{Index pour l'optimisation}
+
+\begin{lstlisting}[language=SQL, caption={Index créés pour accélérer les requêtes}]
+CREATE INDEX idx_capsules_opening_date ON capsules(opening_date);
+CREATE INDEX idx_capsules_creator ON capsules(creator_id);
+CREATE INDEX idx_memories_capsule ON memories(capsule_id);
+CREATE INDEX idx_memories_user ON memories(user_id);
+CREATE INDEX idx_invitations_user ON invitations(invited_user_id);
+CREATE INDEX idx_invitations_status ON invitations(status);
+\end{lstlisting}
+
+
+\section{Back-end : API REST en PHP}
+
+L'API REST est construite en \textbf{PHP 8} natif, sans framework, avec \textbf{PDO} pour l'accès à la base de données.
+
+\subsection{Points d'entrée de l'API}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{l l l X}
+        \toprule
+        \textbf{Méthode} & \textbf{Endpoint} & \textbf{Action} & \textbf{Description} \\
+        \midrule
+        POST & \texttt{/api/auth.php} & register & Inscription \\
+        POST & \texttt{/api/auth.php} & login & Connexion \\
+        GET  & \texttt{/api/auth.php} & logout & Déconnexion \\
+        GET  & \texttt{/api/auth.php} & me & Utilisateur courant \\
+        \midrule
+        GET  & \texttt{/api/capsules/} & list & Lister mes capsules \\
+        GET  & \texttt{/api/capsules/} & detail & Détail d'une capsule \\
+        POST & \texttt{/api/capsules/} & create & Créer une capsule \\
+        POST & \texttt{/api/capsules/} & delete & Supprimer une capsule \\
+        \midrule
+        GET  & \texttt{/api/invitations/} & list & Mes invitations \\
+        POST & \texttt{/api/invitations/} & send & Envoyer une invitation \\
+        POST & \texttt{/api/invitations/} & accept & Accepter \\
+        POST & \texttt{/api/invitations/} & decline & Refuser \\
+        \midrule
+        POST & \texttt{/api/memories/} & add & Ajouter un souvenir \\
+        POST & \texttt{/api/memories/} & delete & Supprimer un souvenir \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Endpoints de l'API REST}
+\end{table}
+
+\subsection{Sécurité}
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Hachage des mots de passe} : utilisation de \texttt{password\_hash()} avec l'algorithme \texttt{PASSWORD\_BCRYPT}.
+    \item \textbf{Sessions PHP} : l'identifiant utilisateur est stocké dans \texttt{\$\_SESSION['user\_id']} côté serveur.
+    \item \textbf{Validation des entrées} : vérification de la longueur, du format email, de l'unicité en base.
+    \item \textbf{Upload sécurisé} : vérification du type MIME (JPEG, PNG, GIF, WEBP), taille max 5 Mo, nom de fichier unique généré par \texttt{uniqid()}.
+    \item \textbf{Requêtes préparées} : toutes les requêtes SQL utilisent des \textbf{prepared statements} PDO pour prévenir les injections SQL.
+    \item \textbf{Gestion d'erreurs} : gestionnaire global d'exceptions renvoyant du JSON structuré.
+\end{itemize}
+
+\subsection{Exemple de code : authentification}
+
+\begin{lstlisting}[language=PHP, caption={Extrait de auth.php — Inscription}]
+case 'register':
+    $data = getJsonBody();
+    $username = trim($data['username'] ?? '');
+    $email    = trim($data['email'] ?? '');
+    $password = $data['password'] ?? '';
+
+    // Validations
+    if (!$username || !$email || !$password)
+        jsonError('Tous les champs sont obligatoires.');
+
+    // Verifier unicite
+    $stmt = $db->prepare(
+        'SELECT id FROM users WHERE username = ? OR email = ?'
+    );
+    $stmt->execute([$username, $email]);
+    if ($stmt->fetch())
+        jsonError('Ce pseudo ou email est deja utilise.');
+
+    // Hachage + insertion
+    $hash = password_hash($password, PASSWORD_BCRYPT);
+    $stmt = $db->prepare(
+        'INSERT INTO users (username, email, password_hash)
+         VALUES (?, ?, ?)'
+    );
+    $stmt->execute([$username, $email, $hash]);
+\end{lstlisting}
+
+
+\section{Front-end : SPA en JavaScript}
+
+Le front-end est une \textbf{Single Page Application} (SPA) écrite en JavaScript vanilla, sans framework. La mise en forme utilise \textbf{Tailwind CSS} via CDN.
+
+\subsection{Principe de fonctionnement}
+
+L'objet \texttt{app} centralise toute la logique de l'application :
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Navigation} : la méthode \texttt{navigate(page, params)} vide le conteneur \texttt{\#app} et appelle la méthode de rendu correspondante (\texttt{renderLogin}, \texttt{renderDashboard}, etc.).
+    \item \textbf{Rendu dynamique} : chaque page est générée par du HTML injecté via \texttt{innerHTML}, avec des \texttt{addEventListener} pour gérer les interactions.
+    \item \textbf{Client API} : l'objet \texttt{api} (dans \texttt{api.js}) encapsule tous les appels \texttt{fetch()} vers l'API REST.
+    \item \textbf{Notifications} : un système de \textit{toast} affiche des messages temporaires (succès, erreur).
+\end{itemize}
+
+\subsection{Gestion du thème sombre/clair}
+
+Le thème est géré via la classe CSS \texttt{dark} sur l'élément \texttt{<html>} :
+
+\begin{lstlisting}[language=Java, caption={Gestion du thème — extrait de app.js}]
+isDark() {
+    return document.documentElement
+        .classList.contains('dark');
+},
+
+toggleTheme() {
+    const html = document.documentElement;
+    html.classList.toggle('dark');
+    localStorage.setItem('theme',
+        html.classList.contains('dark')
+            ? 'dark' : 'light');
+},
+\end{lstlisting}
+
+Le choix du thème est persisté dans \texttt{localStorage} et restauré au chargement de la page via un script inline dans \texttt{index.html}.
+
+\subsection{Pages de l'application}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{l X}
+        \toprule
+        \textbf{Page} & \textbf{Description} \\
+        \midrule
+        Connexion & Formulaire pseudo/email + mot de passe, lien vers inscription \\
+        Inscription & Formulaire pseudo + email + mot de passe, validation côté client \\
+        Dashboard & Liste des capsules de l'utilisateur, badge d'invitations, bouton de création \\
+        Détail capsule & Informations, liste des membres, souvenirs (si ouverte), formulaire d'invitation \\
+        Créer capsule & Formulaire titre + description + date d'ouverture \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Pages de l'application SPA}
+\end{table}
+
+
+\section{Routage Apache}
+
+Le fichier \texttt{.htaccess} assure le routage SPA : toutes les requêtes qui ne correspondent pas à un fichier ou dossier existant sont redirigées vers \texttt{index.html}.
+
+\begin{lstlisting}[caption={Configuration .htaccess pour le routage SPA}]
+RewriteEngine On
+RewriteBase /testminiprjt/
+
+# Ne pas rediriger les fichiers et dossiers existants
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rediriger tout vers index.html
+RewriteRule ^(?!api/)(.*)$ index.html [L,QSA]
+\end{lstlisting}
+
+\section{Design et interface utilisateur}
+
+L'interface adopte un design \textbf{minimaliste} avec une palette de couleurs :
+\begin{itemize}[noitemsep]
+    \item \textbf{Blanc / Noir} : couleurs principales (fond et texte)
+    \item \textbf{Vert nature} (\texttt{\#16A34A} — Tailwind \texttt{green-600}) : couleur d'accent pour les boutons, liens et éléments interactifs
+    \item \textbf{Neutres} : échelle de gris \texttt{neutral} de Tailwind pour les bordures, textes secondaires et arrière-plans
+\end{itemize}
+
+Le \textbf{mode sombre} inverse les fonds (noir profond \texttt{neutral-950}) et adapte les contrastes grâce à la stratégie \texttt{darkMode: 'class'} de Tailwind CSS. L'utilisateur peut basculer entre les deux modes via un bouton soleil/lune, et son choix est persisté dans le navigateur.
+
+
+% ══════════════════════════════════════════════
+%  CHAPITRE 4 : CONCLUSION
+% ══════════════════════════════════════════════
+\chapter{Conclusion}
+
+\section{Bilan}
+
+Le projet \textbf{ChronoVault} a permis de concevoir et développer une application web complète répondant à la problématique initiale : offrir aux utilisateurs un outil collaboratif pour créer et partager des capsules temporelles numériques.
+
+Les objectifs fixés ont été atteints :
+\begin{itemize}[noitemsep]
+    \item Un système d'authentification sécurisé avec hachage bcrypt et sessions PHP.
+    \item Une gestion complète des capsules temporelles avec verrouillage par date.
+    \item Un mécanisme d'invitation par pseudo permettant la collaboration.
+    \item L'upload et l'affichage de souvenirs multimédia (texte + images).
+    \item Une interface moderne, responsive et agréable avec support du mode sombre.
+    \item Une architecture SPA fluide sans rechargement de page.
+\end{itemize}
+
+\section{Compétences acquises}
+
+Ce projet nous a permis de renforcer nos compétences dans :
+\begin{itemize}[noitemsep]
+    \item La conception UML (cas d'utilisation, classes, séquence).
+    \item Le développement d'API REST en PHP natif avec PDO.
+    \item La construction d'une SPA en JavaScript vanilla.
+    \item L'utilisation de Tailwind CSS pour un design rapide et cohérent.
+    \item La gestion de la sécurité web (injections SQL, validation, hachage).
+    \item Le travail collaboratif et la gestion de projet.
+\end{itemize}
+
+\section{Perspectives d'amélioration}
+
+Plusieurs améliorations pourraient être envisagées pour enrichir l'application :
+\begin{itemize}[noitemsep]
+    \item \textbf{Notifications en temps réel} : utilisation de WebSockets pour notifier les invitations et l'ouverture de capsules.
+    \item \textbf{Support vidéo} : permettre l'ajout de vidéos en tant que souvenirs.
+    \item \textbf{Application mobile} : développer un client mobile natif ou PWA.
+    \item \textbf{Chiffrement de bout en bout} : chiffrer les souvenirs pour garantir la confidentialité.
+    \item \textbf{Système de commentaires} : permettre aux membres de réagir aux souvenirs après l'ouverture.
+    \item \textbf{Emails automatiques} : notifier les utilisateurs par email lors d'une invitation ou de l'ouverture d'une capsule.
+    \item \textbf{Migration vers un framework} : envisager Laravel (PHP) ou React/Vue (JS) pour une meilleure maintenabilité.
+\end{itemize}
+
+\vspace{1cm}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{0.3cm}
+
+\begin{center}
+    \textit{Projet réalisé par \textbf{ELHARCHY Mostafa} et \textbf{EL MESKI Karim}.}
+\end{center}
+
+\end{document}
