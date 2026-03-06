@@ -11,9 +11,6 @@
 1. Placez le dossier du projet dans le répertoire `htdocs` de XAMPP (ou `www` de WAMP)
 2. Modifiez `api/config/database.php` si vos identifiants MySQL sont différents
 
-### 3. Lancement
-Accédez à `http://localhost/testminiprjt/`
-
 ## Structure du projet
 
 ```
